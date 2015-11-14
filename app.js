@@ -32,6 +32,12 @@ var PileOntoCommand = {
     }
 };
 
+var PrintTableCommand = {
+    exec: function() {
+        Table.printOutput();
+    }
+};
+
 
 var Table = {
     blocks: [],
@@ -94,13 +100,12 @@ var Table = {
 
         for(var i = aStackIndex; i < aBlock.length; i++) {
             var block = aBlock[i]  
-            bBlock.push(aBlock[i]);
+            bBlock.push(block);
             this.index[block].blockIndex = bBlockindex;
             this.index[block].stackIndex = bBlock.length - 1;
         }
         
-        var len = aBlock.length;
-        for(var i = aStackIndex; i < len; i++) { 
+        for(var i = aStackIndex, len = aBlock.length; i < len; i++) { 
             aBlock.pop();
         }
     },
@@ -114,9 +119,11 @@ var Table = {
         for(var i = stackIndex; i < blocks.length; i++) {
             var block = blocks[i];
             this.index[block] = { blockIndex: block, stackIndex: 0 };
-            blocks.pop();
             this.blocks[block] = [block];
         }    
+        for(var i = stackIndex, len = blocks.length; i < len; i++) {
+             blocks.pop();
+        }
     },
     printOutput: function() {
         for(var i=0; i < this.blocks.length; i++) {
@@ -140,7 +147,7 @@ var Table = {
 var Program = {
     readyToAcceptCommands: false,
     commands: [{
-        cmd: QuitCommand    , regex: /^quit/mi,  
+        cmd: QuitCommand    , regex: /^quit/mi
     },{ cmd: MoveOntoCommand, regex: /^move (:<block_a>[0-9]{1}[0-9]*) onto (:<block_b>[0-9]{1}[0-9]*)/mig
     },{ cmd: MoveOverCommand, regex: /^move (:<block_a>[0-9]{1}[0-9]*) over (:<block_b>[0-9]{1}[0-9]*)/mig
     },{ cmd: PileOntoCommand, regex: /^pile (:<block_a>[0-9]{1}[0-9]*) onto (:<block_b>[0-9]{1}[0-9]*)/mig
